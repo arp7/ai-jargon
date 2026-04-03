@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'"  />
+  <title>AI Economy Jargon Generator — Random AI Buzzword Idea Tool</title>
+  <meta name="description" content="Generate random AI economy startup ideas and buzzword phrases. Combine verbs, adjectives, and nouns to produce the next big thing in tech." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://ai-jargon.vercel.app/" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="AI Economy Jargon Generator" />
+  <meta property="og:description" content="Generate random AI economy startup ideas and buzzword phrases." />
+  <meta property="og:url" content="https://ai-jargon.vercel.app/" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="AI Economy Jargon Generator" />
+  <meta name="twitter:description" content="Generate random AI economy startup ideas and buzzword phrases." />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #0a0a0f;
+      color: #e0e0f0;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      overflow: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(99, 102, 241, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99, 102, 241, 0.05) 1px, transparent 1px);
+      background-size: 40px 40px;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 48px;
+      padding: 32px;
+      text-align: center;
+    }
+
+    header {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .eyebrow {
+      font-size: 16px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #6366f1;
+      font-weight: 600;
+    }
+
+    h1 {
+      font-size: clamp(24px, 4.5vw, 42px);
+      font-weight: 700;
+      color: #f0f0ff;
+      letter-spacing: -1px;
+    }
+
+    h1 span {
+      background: linear-gradient(135deg, #6366f1, #a78bfa, #38bdf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 15px;
+      color: #6b7280;
+      max-width: 360px;
+    }
+
+    .idea-card {
+      width: min(640px, 90vw);
+      min-height: 120px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s;
+    }
+
+    .idea-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(99,102,241,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .idea-card.active { border-color: rgba(99, 102, 241, 0.5); }
+
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #4b5563;
+      padding: 4px;
+      border-radius: 6px;
+      display: none;
+      transition: color 0.2s;
+      line-height: 1;
+    }
+    .copy-btn:hover { color: #a78bfa; }
+    .idea-card.active .copy-btn { display: block; }
+
+    .idea-text {
+      font-size: clamp(20px, 4vw, 32px);
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      line-height: 1.3;
+      color: #f0f0ff;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+
+    .idea-text.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .idea-text .verb  { color: #38bdf8; }
+    .idea-text .adj   { color: #a78bfa; }
+    .idea-text .noun  { color: #34d399; }
+
+    .placeholder {
+      font-size: 15px;
+      color: #374151;
+      font-style: italic;
+      transition: opacity 0.2s;
+    }
+
+    .btn {
+      position: relative;
+      padding: 16px 40px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      letter-spacing: 0.3px;
+      transition: transform 0.15s, box-shadow 0.15s, filter 0.15s;
+      box-shadow: 0 0 0 0 rgba(99,102,241,0.5);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(99,102,241,0.4);
+      filter: brightness(1.1);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+      filter: brightness(0.95);
+    }
+
+    .history {
+      width: min(640px, 90vw);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      min-height: 28px;
+    }
+
+    .history-pill {
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      color: #6b7280;
+      animation: fadein 0.3s ease;
+    }
+
+    @keyframes fadein {
+      from { opacity: 0; transform: scale(0.9); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    footer {
+      position: fixed;
+      bottom: 16px;
+      font-size: 11px;
+      color: #374151;
+    }
+    footer a { color: #4b5563; text-underline-offset: 3px; }
+    footer a:hover { color: #6b7280; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="eyebrow">AI Economy Jargon Generator</div>
+    <h1>What shall we <span>build</span> today?</h1>
+  </header>
+
+  <div class="idea-card" id="card">
+    <p class="placeholder" id="placeholder">Your next project idea will appear here.</p>
+    <p class="idea-text" id="idea"></p>
+    <button class="copy-btn" id="copyBtn" title="Copy to clipboard">
+      <svg id="iconCopy" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+      </svg>
+      <svg id="iconCheck" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+    </button>
+  </div>
+
+  <button class="btn" id="btn">Generate Jargon</button>
+
+  <div class="history" id="history"></div>
+</div>
+
+<footer>Inspired by the venerable <a href="https://www.dack.com/web/bullshit.html" target="_blank" rel="noopener noreferrer">Web Economy BS Generator</a></footer>
+
+<script>
+  const verbs = [
+    "compute","execute","compile","parse","render","query","index","cache","sync","deploy",
+    "iterate","serialize","encrypt","authenticate","authorize",
+    "train","infer","classify","cluster","tokenize","embed","encode","decode","normalize",
+    "sample","batch","fine-tune","evaluate","benchmark",
+    "prompt","hallucinate","ground","align","distill","quantize","prune","augment","chain","orchestrate","route",
+    "reason","reflect","plan","decompose","synthesize","stream","chunk",
+    "automate","accelerate","unlock","disrupt","democratize","productionize","scale","ship",
+    "leverage","architect","pipeline","model","abstract","version","containerize","agent",
+    "vibe-code","deprecate","10x","bootstrap","monetize","gamify","incentivize","parallelize",
+    "paperclip","red-team","sycophantize","post-train","overfit","ensloppify",
+    "backpropagate","prompt-inject","recursively self improve","slop","attention-maximize",
+    "overfit","cross-validate","gradient descent","hyperparameterize","overfit", "recall",
+    "boost","lang-chain","regularize","stem","lemmatize","upscale","retrain",
+    "cloudify","lift and shift",
+  ];
+
+  const adjectives = [
+    "deterministic","stochastic","probabilistic","stateful","stateless","asynchronous",
+    "concurrent","distributed","federated","quantized","sparse","dense","latent",
+    "embedded","tokenized","vectorized","parametric","quantum","localized",
+    "fine-tuned","pretrained","frozen","grounded","aligned","pruned","distilled",
+    "adversarial","robust","synthetic","labeled","unlabeled",
+    "modular","composable","serverless","event-driven","reactive","idempotent",
+    "fault-tolerant","scalable","observable","auditable","sandboxed","ephemeral",
+    "agentic","autonomous","self-correcting","self-reflective","goal-directed","tool-using",
+    "context-aware","memory-augmented","retrieval-augmented","orchestrated","chained",
+    "multi-modal","multi-agent","long-context","instruction-tuned",
+    "adaptive","emergent","general-purpose","frontier","cutting-edge","production-ready","enterprise-grade",
+    "transformative","revolutionary","disruptive","unprecedented","bleeding-edge",
+    "next-generation","superhuman","omni-capable","self-improving","infinitely-scalable",
+    "zero-shot","few-shot","god-mode", "bubbleproof","post-AGI","AGI-native","IPO-ready",
+    "cognitive","sentient-adjacent","reasoning native","agent-first","AI-native","vibe-driven",
+    "fully autonomous","self-healing","self-optimizing","AGI-adjacent","post-AGI-ready",
+    "copilot powered","autopilot-ready","consciousness-approaching","slop-free",
+    "seamless","frictionless","end-to-end","game-changing","magical","best-in-class",
+    "galaxy-brained","trillion-parameter","test-time-scaled","civilization-scale",
+    "labor-displacing","hyper-personalized","thought-speed","moat-building",
+    "world-model powered","hallucination-resistant","deep reasoning","planet-scale","dopamine optimized",
+    "supervized","unsupervized","naive bayes","slop-free","non-sycophantic","auto-regressive",
+  ];
+
+  const nouns = [
+    "models","weights","parameters","gradients","tensors","matrices","vectors",
+    "embeddings","tokens","logits","activations","layers","nodes","neurons",
+    "attention heads","kernels","checkpoints","batches","epochs",
+    "datasets","corpora","annotations","labels","features","samples","pipelines",
+    "shards","artifacts","schemas","registries",
+    "transformers","encoders","decoders","backbones","adapters","quantizers","tokenizers",
+    "context windows","prompts","completions","logprobs","stealth-mode",
+    "clusters","GPUs","TPUs","accelerators","inference servers","endpoints","runtimes",
+    "orchestrators","schedulers","queues","caches","sandboxes",
+    "foundation models","base models","instruction models","multimodal models",
+    "mixtures-of-experts","system prompts","hallucinations","guardrails","reward models",
+    "agents","subagents","tools","tool calls","skills","hooks","plans","tasks",
+    "workflows","chains","graphs","loops","memories","scratchpads","traces",
+    "spans","handoffs","reflections","scaffolds","harnesses","function calls",
+    "copilots","assistants","chatbots","autopilots","reasoners","orchestrators",
+    "retrievers","embedders","rerankers","chunkers","routers","classifiers","summarizers",
+    "frontiers","capabilities","emergences","cognitions","autonomies","singularities",
+    "platforms","ecosystems","flywheels","moats","intelligences","brains","minds",
+    "co-workers", "teammates","workforces","economies","workforce",
+    "mesa-optimizers","intelligence","sycophancy loops","slop factories",
+    "steering vectors","polysemanticity","vibe checks","AI wrappers","doom scenarios",
+    "synthetic employees","scaling laws","compute overhang",
+    "human feedback","reinforcement","ensloppification","ensloppifications",
+    "confusion matrices","K-Nearest Neighbors","logistic regressions","loss functions",
+    "ROC curves","validation sets","training data","humans in the loop","variances",
+    "ensemble learning","autoencoders","dimensionality reductions","quantizations",
+    "latent variables","markov chains","reinforcement learnings","tunings","biases",
+    "LLMs","sigmoid functions","multilayer perceptrons",
+    "embedding layers","word embeddings","temperatures","perplexities","sentiments",
+    "self-attentions","context compression","lemmatizations","sentiment scores",
+    "synthetic staff","transduction models","GPU Direct storages"
+  ];
+
+  const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+
+  const ideaEl      = document.getElementById('idea');
+  const placeholder = document.getElementById('placeholder');
+  const card        = document.getElementById('card');
+  const historyEl   = document.getElementById('history');
+
+  const history = [];
+  const MAX_HISTORY = 6;
+
+  function makeSpan(cls, text) {
+    const s = document.createElement('span');
+    s.className = cls;
+    s.textContent = text;
+    return s;
+  }
+
+  function generate() {
+    const v = pick(verbs);
+    const a = pick(adjectives);
+    const n = pick(nouns);
+
+    ideaEl.classList.remove('visible');
+
+    setTimeout(() => {
+      ideaEl.replaceChildren(
+        makeSpan('verb', v),
+        document.createTextNode(' '),
+        makeSpan('adj', a),
+        document.createTextNode(' '),
+        makeSpan('noun', n)
+      );
+      placeholder.style.display = 'none';
+      card.classList.add('active');
+      ideaEl.classList.add('visible');
+    }, 150);
+
+    history.unshift(`${v} ${a} ${n}`);
+    if (history.length > MAX_HISTORY) history.pop();
+    renderHistory();
+  }
+
+  function renderHistory() {
+    historyEl.replaceChildren(...history.slice(1).map(h => {
+      const pill = document.createElement('span');
+      pill.className = 'history-pill';
+      pill.textContent = h;
+      return pill;
+    }));
+  }
+
+  document.getElementById('btn').addEventListener('click', generate);
+
+  const iconCopy  = document.getElementById('iconCopy');
+  const iconCheck = document.getElementById('iconCheck');
+
+  document.getElementById('copyBtn').addEventListener('click', () => {
+    const text = ideaEl.textContent;
+    if (!text) return;
+    navigator.clipboard.writeText(text).then(() => {
+      iconCopy.style.display  = 'none';
+      iconCheck.style.display = '';
+      setTimeout(() => {
+        iconCopy.style.display  = '';
+        iconCheck.style.display = 'none';
+      }, 1500);
+    });
+  });
+</script>
+
+</body>
+</html>
+<!-- Vibe-coded with love. -->
